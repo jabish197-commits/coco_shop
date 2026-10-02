@@ -1,0 +1,48 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Your order · Cocoa Bliss{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/order-detail.css' %}">{% endblock %}
+{% block content %}
+<section class="order-page">
+  <a class="order-back" href="{% url 'orders:history' %}">← My orders</a>
+  <div class="order-banner">
+    <div class="order-emblem" aria-hidden="true">{% if order.status == 'paid' %}✓{% elif order.status == 'pending' %}◷{% else %}!{% endif %}</div>
+    <div><p class="eyebrow">Cocoa Bliss · Your order</p>
+      <h1>{% if order.status == 'paid' %}Thank you for your order.{% elif order.status == 'pending' %}Your treats are saved.{% else %}Let's try again.{% endif %}</h1>
+      <span class="order-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+      <p>{% if order.status == 'paid' %}Your payment is confirmed. Your order details are below.{% elif order.status == 'pending' %}One more step: complete payment to confirm your order.{% else %}This checkout is closed. Browse the shop to place a new order.{% endif %}</p>
+    </div>
+  </div>
+  <div class="order-reference"><span>Order number <strong>{{ order.id }}</strong></span><span>{{ order.created_at|date:"d M Y, H:i" }}</span></div>
+  <div class="order-columns">
+    <div>
+      <section class="order-panel"><h2>Your chocolates</h2>
+        {% for item in order.items.all %}
+        <div class="order-product">
+          {% with picture=item.product.images.first %}<img src="{% if picture %}{{ picture.image.url }}{% else %}{% static 'images/hero-chocolate.webp' %}{% endif %}" alt="" width="80" height="80">{% endwith %}
+          <div><h3>{{ item.name }}</h3><p>Quantity {{ item.quantity }} · {% if order.currency == "inr" %}₹{% else %}{{ order.currency|upper }}{% endif %} {{ item.price }} each</p></div>
+          <strong>{% if order.currency == "inr" %}₹{% else %}{{ order.currency|upper }}{% endif %} {{ item.total }}</strong>
+        </div>
+        {% endfor %}
+      </section>
+      <div class="order-info-grid">
+        <section class="order-panel"><h2>Delivery details</h2><strong>{{ order.full_name }}</strong><address>{{ order.address }}<br>{{ order.city }}, {{ order.postal_code }}<br>{{ order.country }}</address></section>
+        <section class="order-panel"><h2>Order updates</h2><p class="customer-email">{{ order.email }}</p><p class="order-muted">Your checkout email for order updates.</p><a href="{% url 'core:contact' %}">Need help? Contact us →</a></section>
+      </div>
+      {% if order.gift_message %}<section class="order-panel gift-message"><h2>A little message</h2><p>{{ order.gift_message|linebreaksbr }}</p></section>{% endif %}
+    </div>
+    <aside class="order-panel payment-panel">
+      <h2>Order summary</h2>
+      <div class="order-money"><span>Products</span><span>{% if order.currency == "inr" %}₹{% else %}{{ order.currency|upper }}{% endif %} {{ order.total }}</span></div>
+      <div class="order-money"><span>Delivery</span><span>Included</span></div>
+      <div class="order-money order-grand-total"><span>{% if order.status == 'paid' %}Total paid{% else %}Order total{% endif %}</span><strong>{% if order.currency == "inr" %}₹{% else %}{{ order.currency|upper }}{% endif %} {{ order.total }}</strong></div>
+      {% if order.status == 'pending' %}
+      <form method="post" action="{% url 'orders:pay' order.id %}">{% csrf_token %}<button type="submit" class="order-pay">Continue to payment →</button></form>
+      <p class="order-muted">Already paid? <a href="{% url 'orders:confirmation' order.id %}">Refresh order status</a>.</p>
+      {% elif order.status == 'paid' %}<p class="paid-note">✓ Payment received</p>{% endif %}
+      <a class="order-shop" href="{% url 'shop:product_list' %}">Continue shopping</a>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+

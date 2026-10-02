@@ -1,0 +1,18 @@
+.product-card img {
+  display: block;
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .product-card a:hover img {
+    transform: translateY(-5px) scale(1.025);
+    box-shadow: 0 12px 24px rgba(56, 32, 23, .2), 0 0 0 3px #c49359;
+    filter: brightness(1.06);
+  }
+}
+.product-card a:focus-visible img {
+  box-shadow: 0 0 0 3px #c49359;
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card img { transition: none; }
+  .product-card a:hover img { transform: none; }
+}

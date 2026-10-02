@@ -1,0 +1,55 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Checkout · Cocoa Bliss{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/checkout.css' %}">{% endblock %}
+{% block content %}
+<section class="checkout-page">
+  <a class="back-to-bag" href="{% url 'cart:detail' %}">← Back to your bag</a>
+  <div class="checkout-heading"><p class="eyebrow">A little joy is on its way</p><h1>Make it yours.</h1><p>Add your delivery details, then review your order.</p></div>
+  <ol class="checkout-steps" aria-label="Checkout progress"><li aria-current="step"><span>1</span> Delivery details</li><li><span>2</span> Review order</li><li><span>3</span> Payment</li></ol>
+  <div class="checkout-layout">
+    <form method="post" class="checkout-card delivery-form">
+      {% csrf_token %}{{ form.checkout_key }}
+      {% if form.errors %}<div class="checkout-errors" role="alert">Please check the details below.{{ form.non_field_errors }}{{ form.checkout_key.errors }}</div>{% endif %}
+      <h2>Your details</h2><p class="section-hint">Who are we sending your chocolates to?</p>
+      <div class="checkout-fields">
+        {% include 'orders/checkout_field.html' with field=form.full_name %}
+        {% include 'orders/checkout_field.html' with field=form.email %}
+      </div>
+      <div class="checkout-divider"></div>
+      <h2>Delivery address</h2>
+      {% include 'orders/checkout_field.html' with field=form.address %}
+      <div class="checkout-fields">
+        {% include 'orders/checkout_field.html' with field=form.city %}
+        {% include 'orders/checkout_field.html' with field=form.postal_code %}
+      </div>
+      {% include 'orders/checkout_field.html' with field=form.country %}
+      <div class="checkout-divider"></div>
+      <details class="gift-note" {% if form.gift_message.value or form.gift_message.errors %}open{% endif %}>
+        <summary>Add a gift message <span>Optional</span></summary>
+        {% include 'orders/checkout_field.html' with field=form.gift_message %}
+      </details>
+      <button class="checkout-submit" type="submit">Save &amp; review order →</button>
+      <p class="checkout-note">No payment is taken at this step.</p>
+    </form>
+    <aside class="checkout-card order-summary" aria-label="Order summary">
+      <div class="summary-title"><h2>Your little treats</h2><span>{{ basket|length }} items</span></div>
+      {% for item in basket %}
+      <div class="summary-item">
+        {% with picture=item.product.images.first %}
+        <img src="{% if picture %}{{ picture.image.url }}{% else %}{% static 'images/hero-chocolate.webp' %}{% endif %}" alt="" width="68" height="68">
+        {% endwith %}
+        <div><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a><small>Quantity: {{ item.quantity }}</small></div>
+        <strong>₹ {{ item.total }}</strong>
+      </div>
+      {% endfor %}
+      <div class="summary-line"><span>Subtotal</span><span>₹ {{ basket.total }}</span></div>
+      <div class="summary-line"><span>Delivery</span><span>Included</span></div>
+      <div class="summary-total"><span>Total</span><strong>₹ {{ basket.total }}</strong></div>
+      <p class="summary-caption">A little chocolate. A lovely moment.</p>
+      <a class="edit-bag" href="{% url 'cart:detail' %}">Edit your bag</a>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+
+

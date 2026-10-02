@@ -1,0 +1,17 @@
+<style>
+body button,body .button,body .bag-checkout,body .history-view,body .order-pay{border-radius:12px;min-height:44px;font-weight:600;letter-spacing:.015em;transition:background .18s ease,box-shadow .18s ease,transform .18s ease}
+body button:not(.text-button):not(.bag-remove):not([data-favourite-toggle]),body .button,body .bag-checkout,body .history-view,body .order-pay{background:linear-gradient(135deg,#513323,#2f1b14);color:#fff8ed;border:1px solid #68452e;box-shadow:0 4px 10px #38201716,inset 0 1px 0 #ffffff16}
+body button:hover:not(:disabled),body .button:hover,body .bag-checkout:hover,body .history-view:hover,body .order-pay:hover{transform:translateY(-2px);box-shadow:0 7px 16px #38201722}
+body button:active:not(:disabled),body .button:active,body .bag-checkout:active,body .history-view:active{transform:translateY(0)}
+body button:focus-visible,body a:focus-visible,body input:focus-visible{outline:3px solid #b9884c;outline-offset:4px}
+body button:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+body .bag-quantity button,body button.text-button{background:#fffaf1!important;color:#704d31!important;border:1px solid #dac4aa!important;padding:8px 14px;text-decoration:none;box-shadow:none!important}
+body button.bag-remove{padding:8px 12px;border:1px solid #e4c5b9;background:#fff5ef;color:#983f2c;text-decoration:none;box-shadow:none}
+body button.bag-remove:hover{background:#f9e5db}
+body input[type=number]{border:1px solid #d9c3a9;border-radius:10px;background:#fffcf6;min-height:44px;text-align:center;font-weight:600;width:90px;padding:10px;color:#382017}
+body .product-detail form{margin:24px 0 30px;padding:20px;background:#f1e5d4;border:1px solid #e3ceb3;border-radius:16px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+body .product-detail form p{margin:0}body .product-detail form label{font-size:12px;letter-spacing:.04em;color:#73573e;margin-bottom:8px}
+body .product-detail form button{display:inline-flex;align-items:center;justify-content:center;gap:14px;padding:13px 24px;min-height:48px}
+body .product-detail form button svg{width:20px;height:20px;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){body button,body .button,body .bag-checkout,body .history-view,body .order-pay{transition:none;transform:none!important}}
+</style>

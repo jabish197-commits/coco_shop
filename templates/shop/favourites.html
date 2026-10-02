@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}My favourites · Cocoa Bliss{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/shop.css' %}">{% endblock %}
+{% block content %}
+<section class="section" id="favourites-page">
+  <p class="eyebrow">Saved for later</p>
+  <h1>Your favourites</h1>
+  <p>The chocolates you love, all in one place. Saved in this browser.</p>
+  <div id="favourites-empty" hidden>
+    <h2>No favourites yet</h2>
+    <p>Tap the heart on a chocolate to save it here.</p>
+    <a class="button" href="{% url 'shop:product_list' %}">Explore chocolates</a>
+  </div>
+  <div class="product-grid" id="favourites-grid" hidden>
+    {% for product in products %}{% include 'includes/product_card.html' %}{% endfor %}
+  </div>
+  <noscript><p>Enable JavaScript to see the favourites saved in this browser.</p></noscript>
+</section>
+{% endblock %}

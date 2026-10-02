@@ -1,0 +1,15 @@
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Cocoa Bliss{% endblock %}</title>
+<link rel="icon" href="{% static 'images/logo.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/product-hover.css' %}">
+<link rel="stylesheet" href="{% static 'css/favourites.css' %}">
+<script src="{% static 'js/favourites.js' %}?v=2" defer></script>
+{% block styles %}{% endblock %}{% include 'includes/button_styles.html' %}
+<script src="{% static 'js/main.js' %}" defer></script></head>
+<body>{% include 'includes/navbar.html' %}
+<div id="favourite-status" class="favourite-status" role="status" aria-live="polite"></div>
+<main id="main">{% for message in messages %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}</main>{% include 'includes/footer.html' %}</body></html>
+

@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="narrow"><h1>Payment was not completed.</h1><p>Your order is saved. View its status and try again if payment is still pending.</p><a class="button" href="{% url 'orders:confirmation' order.id %}">View order</a></section>{% endblock %}

@@ -1,0 +1,1 @@
+.hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5%;padding:60px 5%;background:#efe0ca}.hero p{max-width:420px}.hero img{width:100%;border-radius:48% 48% 6px 6px;aspect-ratio:1;object-fit:cover}.hero .button{margin-top:20px}@media(max-width:700px){.hero{grid-template-columns:1fr;gap:35px}.hero img{max-height:380px}}

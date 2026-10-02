@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}My orders · Cocoa Bliss{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'css/order-history.css' %}">{% endblock %}
+{% block content %}
+<section class="history-page">
+  <div class="history-heading">
+    <div><p class="eyebrow">Your Cocoa Bliss collection</p><h1>A little joy,<br><em>worth revisiting.</em></h1><p class="history-intro">Your orders, all in one sweet place.</p></div>
+    <a class="history-shop" href="{% url 'shop:product_list' %}">Discover more chocolate <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="history-label"><h2>My orders</h2><span>{{ orders|length }} recent order{{ orders|length|pluralize }}</span></div>
+  <div class="history-list">
+  {% for order in orders %}
+    <article class="history-card">
+      <div class="history-card-top"><div><span class="history-overline">Order placed</span><time datetime="{{ order.created_at|date:'c' }}">{{ order.created_at|date:"d M Y" }}</time></div><span class="history-badge history-badge--{{ order.status }}"><span aria-hidden="true">●</span> {{ order.get_status_display }}</span></div>
+      <div class="history-card-body">
+        <div class="history-products">
+          {% for item in order.items.all %}
+          <div class="history-product">
+            {% with picture=item.product.images.first %}<img src="{% if picture %}{{ picture.image.url }}{% else %}{% static 'images/hero-chocolate.webp' %}{% endif %}" alt="" width="76" height="76" loading="lazy">{% endwith %}
+            <div><h3>{{ item.name }}</h3><p>Quantity {{ item.quantity }}</p></div>
+          </div>
+          {% empty %}<p>Your chocolate selection</p>{% endfor %}
+        </div>
+        <div class="history-total"><span class="history-overline">Order total</span><strong>{% if order.currency == "inr" %}₹{% else %}{{ order.currency|upper }}{% endif %} {{ order.total }}</strong><a class="history-view" href="{% url 'orders:confirmation' order.id %}" aria-label="View order {{ order.id }}">View order <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="history-card-bottom"><span class="history-reference">Order reference <span>{{ order.id }}</span></span><span>{% if order.status == 'pending' %}Ready when you are — complete your payment.{% elif order.status == 'paid' %}Payment confirmed. Thank you for your order.{% else %}Open your order for more details.{% endif %}</span></div>
+    </article>
+  {% empty %}
+    <div class="history-empty"><span class="history-empty-icon" aria-hidden="true">♡</span><h2>Your first sweet moment awaits.</h2><p>Find a little something you love. Your orders will appear here.</p><a class="history-view" href="{% url 'shop:product_list' %}">Explore the collection →</a></div>
+  {% endfor %}
+  </div>
+  <p class="history-signoff">Good chocolate. Lovely memories.</p>
+</section>
+{% endblock %}
+
