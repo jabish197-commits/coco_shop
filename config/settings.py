@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -10,7 +11,7 @@ load_dotenv(BASE_DIR / ".env")
 
 
 # General
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 SECRET_KEY = os.getenv("SECRET_KEY", "")
 if not SECRET_KEY:
@@ -78,13 +79,25 @@ ASGI_APPLICATION = "config.asgi.application"
 
 
 # Database
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        "OPTIONS": {"timeout": 20},
-    },
-}
+import dj_database_url
+
+if os.getenv("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=600,
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+            "OPTIONS": {"timeout": 20},
+        },
+    }
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
