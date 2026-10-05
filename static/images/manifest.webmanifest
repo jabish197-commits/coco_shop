@@ -1,0 +1,23 @@
+{
+  "name": "Cocoa Bliss",
+  "short_name": "Cocoa Bliss",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#352219",
+  "theme_color": "#352219",
+  "icons": [
+    {
+      "src": "/static/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

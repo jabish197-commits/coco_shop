@@ -19,7 +19,11 @@ html[data-customer-theme="dark"] a{color:inherit}
 #customer-theme-toggle{padding:0}
 </style>
 <title>{% block title %}Cocoa Bliss{% endblock %}</title>
-<link rel="icon" href="{% static 'images/logo.svg' %}" type="image/svg+xml">
+<link rel="manifest" href="{% static 'images/manifest.webmanifest' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/icon-180.png' %}">
+<meta name="theme-color" content="#352219">
+<link rel="icon" sizes="192x192" href="{% static 'images/icon-192.png' %}" type="image/png">
+<link rel="icon"  href="{% static 'images/logo.svg' %}" type="image/svg+xml">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/product-hover.css' %}">
 <link rel="stylesheet" href="{% static 'css/favourites.css' %}">
@@ -31,7 +35,7 @@ html[data-customer-theme="dark"] a{color:inherit}
 <main id="main">{% for message in messages %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
 {% block content %}{% endblock %}</main>{% include 'includes/footer.html' %}<script>
 (()=>{const b=document.getElementById('customer-theme-toggle');if(!b)return;
-function render(){const dark=document.documentElement.dataset.customerTheme==='dark';b.setAttribute('aria-pressed',String(dark));b.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');b.title=dark?'Switch to light mode':'Switch to dark mode';b.querySelector('[data-theme-symbol]').textContent=dark?'☀':'☾'}
+function render(){const dark=document.documentElement.dataset.customerTheme==='dark';b.setAttribute('aria-pressed',String(dark));b.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');b.title=dark?'Switch to light mode':'Switch to dark mode';b.querySelector('[data-theme-symbol]').textContent=dark?'\u2600':'\u263e'}
 b.addEventListener('click',()=>{const t=document.documentElement.dataset.customerTheme==='dark'?'light':'dark';document.documentElement.dataset.customerTheme=t;try{localStorage.setItem('cocoa-customer-theme',t)}catch(e){}render()});
 window.addEventListener('storage',e=>{if(e.key==='cocoa-customer-theme'&&(e.newValue==='light'||e.newValue==='dark')){document.documentElement.dataset.customerTheme=e.newValue;render()}});render()})();
 </script></body></html>
