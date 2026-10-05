@@ -1,0 +1,119 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}{{ block.super }}
+<style>
+body{background:#faf4e9!important}
+#header{background:#f9f2e7!important;color:#432a1d!important;border-bottom:1px solid #e4d1b6;padding:24px 36px}
+#header a,#branding h1{color:#432a1d!important}
+div.breadcrumbs{background:#eee0c9!important;color:#60412e!important}
+div.breadcrumbs a{color:#60412e!important}
+#nav-sidebar{background:#fff8ee}#nav-sidebar .module th,#nav-sidebar .module td{background:#fff8ee}
+.cb-hero h1{font-family:Georgia,serif!important;font-weight:400!important;font-size:clamp(30px,4vw,52px)!important}
+
+#content{max-width:1400px;margin:auto;width:auto!important}
+.cb-overview{--ink:#493022;--muted:#796655;color:var(--ink);background:#faf5ec;padding:32px;border-radius:24px}
+.cb-overview h1,.cb-overview h2{color:var(--ink)}
+.cb-hero{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:28px}
+.cb-hero h1{font-size:34px;margin:8px 0}.cb-hero p{color:var(--muted)}
+.cb-eyebrow{text-transform:uppercase;letter-spacing:3px;font-size:11px;font-weight:700}
+.cb-link{display:inline-block;background:#593b29!important;color:#fff!important;padding:12px 18px;border-radius:12px}
+.cb-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:16px;margin-bottom:24px}
+.cb-metric{background:#fffdf9;border:1px solid #e9dcc8;border-radius:18px;padding:22px}
+.cb-metric span{display:block;color:var(--muted);font-size:13px}.cb-metric strong{display:block;font-size:32px;margin-top:12px;color:var(--ink)}
+.cb-panels{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+.cb-panel{background:#fffdf9;border:1px solid #e9dcc8;border-radius:18px;padding:22px;overflow:auto}
+.cb-panel h2{font-size:19px;margin:0 0 20px;background:none}
+.cb-panel table{width:100%}.cb-panel td,.cb-panel th{background:#fffdf9!important;color:var(--ink);padding:12px 8px;border-color:#eee3d3}
+.cb-panel th{color:var(--muted)}.cb-panel a{color:#805530!important}
+.cb-badge{background:#f4e5cc;padding:5px 9px;border-radius:20px;white-space:nowrap}
+.cb-manage{margin-top:24px}.cb-manage .module{background:#fffdf9;border-radius:12px;overflow:hidden}
+.cb-manage caption{background:#725039!important}.cb-manage td,.cb-manage th{background:#fffdf9;color:#493022}
+.cb-manage a{color:#805530}.cb-manage caption a{color:white!important}
+@media(max-width:850px){.cb-panels{grid-template-columns:1fr}.cb-overview{padding:18px}.cb-hero{align-items:flex-start;flex-direction:column}}
+
+#nav-sidebar,#toggle-nav-sidebar{display:none!important}
+.main.shifted>#content{margin-left:0!important}
+#content{padding:24px!important;max-width:1600px}
+.cb-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}
+.cb-side{background:linear-gradient(160deg,#422a20,#65452e);color:#fff5e5;padding:28px 20px;border-radius:24px;align-self:start;position:sticky;top:20px}
+.cb-side .cb-wordmark{font:26px Georgia,serif;color:#fff5e5;margin-bottom:8px}
+.cb-side p{color:#dfc5a2;font-size:12px;margin-bottom:28px}
+.cb-side a{display:flex;gap:12px;align-items:center;color:#f9efdf!important;padding:13px 14px;margin:7px 0;border-radius:12px;font-size:14px}
+.cb-side a:hover,.cb-side a.cb-current{background:#ffffff17}
+.cb-side a span{font-size:20px;color:#e7ba79;width:23px;text-align:center}
+.cb-side .cb-side-note{margin-top:35px;padding-top:20px;border-top:1px solid #ffffff24;color:#dfc5a2;line-height:1.8;font-size:12px}
+.cb-overview{background:#f8f3ea;padding:28px;border-radius:24px;min-width:0}
+.cb-hero{background:linear-gradient(120deg,#edddc3,#f8edda);border:1px solid #e8d4b4;border-radius:22px;padding:30px;position:relative}
+.cb-hero h1{font-size:clamp(28px,3vw,44px)!important;line-height:1.12}
+.cb-hero p{max-width:440px;line-height:1.7}
+.cb-link{white-space:nowrap;box-shadow:0 5px 15px #54372220}
+.cb-metric{box-shadow:0 5px 18px #57452b06;border:1px solid #e8dcc9;padding:22px;position:relative;overflow:hidden}
+.cb-metric:before{content:'';display:block;width:30px;height:4px;background:#bd8c49;border-radius:8px;margin-bottom:17px}
+.cb-metric:nth-child(2):before{background:#758463}.cb-metric:nth-child(3):before{background:#a56e58}.cb-metric:nth-child(4):before{background:#ccaa55}
+.cb-metric strong{font-family:Georgia,serif;font-size:38px;font-weight:400}
+.cb-panel{box-shadow:0 5px 18px #57452b06}
+.cb-panel h2{font-family:Georgia,serif;font-weight:400;font-size:23px}
+.cb-panel td{font-size:13px}.cb-panel th{font-size:11px;text-transform:uppercase;letter-spacing:.7px}
+.cb-panel tbody tr:hover td{background:#fbf4e7!important}
+.cb-manage h2{font:25px Georgia,serif;color:#493022}
+.cb-manage .module{border:1px solid #e9dcc8;margin-bottom:16px}
+.cb-side a:focus-visible,.cb-link:focus-visible{outline:3px solid #dcae65;outline-offset:3px}
+@media(max-width:1050px){.cb-layout{grid-template-columns:1fr}.cb-side{position:static;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:16px}.cb-side .cb-wordmark{margin:0 18px 0 0}.cb-side p,.cb-side-note{display:none}.cb-side a{margin:0}.cb-hero{padding:22px}}
+@media(max-width:600px){#content{padding:10px!important}.cb-overview{padding:14px}.cb-side{border-radius:16px}.cb-side .cb-wordmark{width:100%;margin-bottom:8px}.cb-hero{align-items:flex-start}.cb-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.cb-metric{padding:15px}.cb-metric strong{font-size:29px}}
+
+.cb-manage-intro{color:#806b57;font-size:14px;margin:-8px 0 22px;line-height:1.6}
+.cb-manage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.cb-tool-card{background:#fffdf9;border:1px solid #e7d8c1;border-radius:20px;box-shadow:0 6px 20px #68482906;overflow:hidden;min-width:0}
+.cb-tool-heading{display:flex;gap:14px;align-items:center;padding:22px;background:linear-gradient(110deg,#f1e4ce,#fbf5eb);border-bottom:1px solid #ebdfcd}
+.cb-tool-icon{display:grid;place-items:center;width:46px;height:46px;flex-shrink:0;border-radius:14px;background:#fffaf2;border:1px solid #ddc39b;color:#8e6436;font-size:26px}
+.cb-tool-kicker{font-size:9px;letter-spacing:1.8px;color:#927451;font-weight:700}
+.cb-tool-heading h3{font:22px Georgia,serif;color:#493022;margin:5px 0 0;padding:0}
+.cb-tool-rows{padding:4px 20px}
+.cb-tool-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 0;border-bottom:1px solid #f0e6d7}
+.cb-tool-row:last-child{border-bottom:0}
+.cb-tool-name{font-size:14px;font-weight:600;color:#594231}
+.cb-tool-actions{display:flex;gap:8px;flex-shrink:0}
+.cb-tool-actions a{display:inline-flex;gap:7px;align-items:center;justify-content:center;padding:9px 12px;border-radius:10px;font-size:12px;line-height:1.2;border:1px solid #dfcdb2;color:#785530!important;background:#fffaf1;text-decoration:none}
+.cb-tool-actions .cb-tool-add{background:#61422e;color:#fff7eb!important;border-color:#61422e}
+.cb-tool-actions a:hover{box-shadow:0 3px 10px #67452120;background:#efdec3}
+.cb-tool-actions .cb-tool-add:hover{background:#493022}
+.cb-tool-actions a:focus-visible{outline:3px solid #b88946;outline-offset:3px}
+@media(max-width:800px){.cb-manage-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.cb-tool-row{flex-wrap:wrap}.cb-tool-heading{padding:18px}.cb-tool-heading h3{font-size:20px}}
+</style>{% endblock %}
+{% block content %}
+<div class="cb-layout">
+<aside class="cb-side" aria-label="Dashboard navigation">
+<div class="cb-wordmark">Cocoa Bliss</div><p>YOUR STORE STUDIO</p>
+<a class="cb-current" href="{% url 'admin:index' %}" aria-current="page"><span aria-hidden="true">▦</span> Overview</a>
+{% if perms.shop.view_product %}<a href="{% url 'admin:shop_product_changelist' %}"><span aria-hidden="true">◇</span> Products & stock</a>{% endif %}
+{% if perms.orders.view_order %}<a href="{% url 'admin:orders_order_changelist' %}"><span aria-hidden="true">▤</span> Orders</a>{% endif %}
+{% if perms.auth.view_user %}<a href="{% url 'admin:auth_user_changelist' %}?is_staff__exact=0"><span aria-hidden="true">♙</span> Customers</a>{% endif %}
+<a href="{% url 'shop:product_list' %}"><span aria-hidden="true">↗</span> Visit storefront</a>
+<div class="cb-side-note">A little chocolate.<br>A beautifully managed store.<br><br>Use Admin assistant below for quick answers.</div>
+</aside><div class="cb-overview">
+<div class="cb-hero"><div><span class="cb-eyebrow">Cocoa Bliss · Admin</span><h1>A sweeter day<br>starts here.</h1><p>Manage your chocolates, keep stock up to date and follow every order.</p></div><a class="cb-link" href="{% url 'shop:product_list' %}">Visit shop ↗</a></div>
+<div class="cb-metrics">
+{% if product_total != None %}<div class="cb-metric"><span>Products</span><strong>{{ product_total }}</strong></div><div class="cb-metric"><span>Available units</span><strong>{{ stock_total }}</strong></div>{% endif %}
+{% if order_total != None %}<div class="cb-metric"><span>Total orders</span><strong>{{ order_total }}</strong></div><div class="cb-metric"><span>Awaiting payment</span><strong>{{ pending_total }}</strong></div>{% endif %}
+{% if customer_total != None %}<div class="cb-metric"><span>Customers</span><strong>{{ customer_total }}</strong></div>{% endif %}
+</div>
+<div class="cb-panels">
+{% if order_total != None %}<section class="cb-panel"><h2>Recent orders</h2><table><thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th></tr></thead><tbody>{% for order in recent_orders %}<tr><td><a href="{% url 'admin:orders_order_change' order.pk %}">#{{ order.pk|stringformat:"s"|slice:":8" }}</a></td><td>{{ order.created_at|date:"d M Y" }}</td><td>{{ order.get_status_display }}</td><td>{{ order.currency|upper }} {{ order.total }}</td></tr>{% empty %}<tr><td colspan="4">No orders yet.</td></tr>{% endfor %}</tbody></table></section>{% endif %}
+{% if product_total != None %}<section class="cb-panel"><h2>Stock needs attention</h2><table><thead><tr><th>Product</th><th>Available</th></tr></thead><tbody>{% for product in low_stock %}<tr><td><a href="{% url 'admin:shop_product_change' product.pk %}">{{ product.name }}</a></td><td><span class="cb-badge">{{ product.stock_quantity }} left</span></td></tr>{% empty %}<tr><td colspan="2">All products have more than five units.</td></tr>{% endfor %}</tbody></table></section>{% endif %}
+</div>
+<section class="cb-manage"><h2>Manage your store</h2><p class="cb-manage-intro">Everything you need to keep Cocoa Bliss running beautifully.</p>
+<div class="cb-manage-grid">
+{% for app in app_list %}
+<article class="cb-tool-card">
+<div class="cb-tool-heading"><span class="cb-tool-icon" aria-hidden="true">{% if app.app_label == 'shop' %}◇{% elif app.app_label == 'orders' %}▤{% elif app.app_label == 'auth' %}♙{% else %}✉{% endif %}</span><div><span class="cb-tool-kicker">STORE MANAGEMENT</span><h3>{% if app.app_label == 'auth' %}People & access{% elif app.app_label == 'core' %}Customer messages{% elif app.app_label == 'shop' %}Product catalogue{% else %}{{ app.name }}{% endif %}</h3></div></div>
+<div class="cb-tool-rows">
+{% for model in app.models %}<div class="cb-tool-row"><span class="cb-tool-name">{{ model.name }}</span><div class="cb-tool-actions">
+{% if model.admin_url %}<a class="cb-tool-view" href="{{ model.admin_url }}" aria-label="View {{ model.name }}">View <span aria-hidden="true">↗</span></a>{% endif %}
+{% if model.add_url %}<a class="cb-tool-add" href="{{ model.add_url }}" aria-label="Add {{ model.name }}"><span aria-hidden="true">+</span> Add</a>{% endif %}
+</div></div>{% endfor %}
+</div></article>
+{% empty %}<p>No management sections are available for your account.</p>{% endfor %}
+</div></section>
+</div>
+</div>
+{% endblock %}

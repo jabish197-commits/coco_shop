@@ -20,6 +20,7 @@ class Product(models.Model):
     ingredients = models.TextField(blank=True)
     allergens = models.CharField(max_length=250, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.50"))])
+    stock_quantity = models.PositiveIntegerField(default=0, help_text="Units available to sell. Pending orders already reserve their units.")
     active = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
     is_gift_box = models.BooleanField(default=False)

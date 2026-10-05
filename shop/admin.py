@@ -5,7 +5,8 @@ class ProductImageInline(admin.TabularInline):
     extra = 1
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "price", "active", "featured", "is_gift_box"]
+    list_display = ["name", "stock_quantity", "price", "active", "featured", "is_gift_box"]
+    list_editable = ["stock_quantity"]
     list_filter = ["active", "category", "is_gift_box"]
     search_fields = ["name"]
     prepopulated_fields = {"slug": ("name",)}

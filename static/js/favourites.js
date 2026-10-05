@@ -1,11 +1,14 @@
 "use strict";
 (() => {
-  const key = "cocoa-bliss-favourites";
+  // Never adopt the legacy shared list: its owner is unknown.
+  const owner = document.body.dataset.favouritesOwner;
+  const key = "cocoa-bliss-favourites:v2:" + (owner || "guest");
+  const storage = () => owner ? window.localStorage : window.sessionStorage;
   let favourites = new Set();
   let timer;
   const read = () => {
     try {
-      const saved = JSON.parse(localStorage.getItem(key) || "[]");
+      const saved = JSON.parse(storage().getItem(key) || "[]");
       favourites = new Set(Array.isArray(saved) ? saved.filter(id => typeof id === "string") : []);
     } catch (_) { favourites = new Set(); }
   };
@@ -42,7 +45,7 @@
     const selected = !favourites.has(id);
     selected ? favourites.add(id) : favourites.delete(id);
     let saved = true;
-    try { localStorage.setItem(key, JSON.stringify([...favourites])); }
+    try { storage().setItem(key, JSON.stringify([...favourites])); }
     catch (_) { saved = false; }
     render();
     const status = document.getElementById("favourite-status");

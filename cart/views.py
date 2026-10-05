@@ -17,6 +17,9 @@ def add(request, product_id):
             Cart(request).add(product, form.cleaned_data["quantity"], request.POST.get("replace") == "1")
         except ValueError as error:
             messages.error(request, str(error))
+        else:
+            if request.POST.get("action") == "buy_now":
+                return redirect("orders:checkout")
     else:
         messages.error(request, "Choose a quantity from 1 to 99.")
     return redirect("cart:detail")
@@ -25,3 +28,4 @@ def add(request, product_id):
 def remove(request, product_id):
     Cart(request).remove(product_id)
     return redirect("cart:detail")
+

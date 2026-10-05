@@ -1,0 +1,13 @@
+{% load static %}
+<nav class="category-strip" aria-label="Chocolate categories">
+  <a class="category-item {% if not selected_category %}is-selected{% endif %}" href="?q={{ query|urlencode }}" data-category="" {% if not selected_category %}aria-current="true"{% endif %}>
+    <span class="category-icon" aria-hidden="true"><img src="{% static 'images/category-assortment.svg' %}" width="40" height="40" alt=""></span><span>All chocolates</span>
+  </a>
+  {% for category in categories %}
+  <a class="category-item {% if selected_category == category.slug %}is-selected{% endif %}" href="?category={{ category.slug|urlencode }}&amp;q={{ query|urlencode }}" data-category="{{ category.slug }}" {% if selected_category == category.slug %}aria-current="true"{% endif %}>
+    <span class="category-icon" aria-hidden="true">{% with name=category.name|lower %}{% if 'caramel' in name %}🍮{% elif 'fudge' in name %}🍫{% elif 'dark' in name %}<img src="{% static 'images/category-dark.svg' %}" width="40" height="40" alt="">{% elif 'gift' in name %}🎁{% elif 'nut' in name %}🥜{% elif 'milk' in name %}🥛{% elif 'white' in name %}🤍{% elif 'truffle' in name %}🍬{% elif 'filled' in name %}🍯{% else %}🍫{% endif %}{% endwith %}</span>
+    <span>{{ category.name }}</span>
+  </a>
+  {% endfor %}
+</nav>
+

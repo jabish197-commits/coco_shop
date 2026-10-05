@@ -5,3 +5,5 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ["name", "email", "created_at"]
     readonly_fields = ["created_at"]
     search_fields = ["name", "email", "message"]
+
+from . import dashboard  # Register the store overview after admin setup.

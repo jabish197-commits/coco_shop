@@ -1,3 +1,4 @@
+from .services import release_stock
 import uuid
 import stripe
 from django.conf import settings
@@ -58,4 +59,5 @@ def stripe_webhook(request):
             order.status = Order.Status.FAILED
         order.save(update_fields=["status"])
         payment.save()
+        release_stock(order.pk)
     return HttpResponse(status=200)

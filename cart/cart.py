@@ -15,6 +15,8 @@ class Cart:
         quantity = quantity if replace else self.data.get(key, 0) + quantity
         if not 1 <= quantity <= 99:
             raise ValueError("Choose between 1 and 99 per product.")
+        if quantity > product.stock_quantity:
+            raise ValueError(f"Only {product.stock_quantity} units of {product.name} are available.")
         self.data[key] = quantity
         self.save()
 

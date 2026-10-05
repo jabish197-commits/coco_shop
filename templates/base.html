@@ -1,15 +1,38 @@
 {% load static %}<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+(function(){let t;try{t=localStorage.getItem('cocoa-customer-theme')}catch(e){}
+document.documentElement.dataset.customerTheme=(t==='dark'||t==='light')?t:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
+</script>
+<style>
+html[data-customer-theme="dark"]{color-scheme:dark;--cocoa:#f5e5cf;--cream:#211c18;--gold:#dfb375;--muted:#c9b69f}
+html[data-customer-theme="dark"] body{background:#211c18;color:#f5e5cf}
+html[data-customer-theme="dark"] :is(header,footer,.hero,.bag-summary,.bag-note,.order-banner,.profile-summary){background:#30261e!important;color:#f5e5cf!important;border-color:#634a34!important}
+html[data-customer-theme="dark"] :is(.product-card,.bag-items,.bag-empty,.order-panel,.order-card,.checkout-card,.checkout-form,.checkout-summary,.profile-form,.auth){background:#29221c!important;color:#f5e5cf!important;border-color:#634a34!important}
+html[data-customer-theme="dark"] :is(h1,h2,h3,label,.brand,.bag-product,.bag-line-total,.order-money){color:#f5e5cf!important}
+html[data-customer-theme="dark"] :is(p,.eyebrow,.helptext,.bag-category,.order-muted){color:#d4bfa5}
+html[data-customer-theme="dark"] :is(input,textarea,select){background:#201a16!important;color:#f5e5cf!important;border-color:#8c6947!important}
+html[data-customer-theme="dark"] :is(button,.button,.bag-checkout,.order-pay){background:#76502f!important;color:#fff3e1!important;border-color:#a77d4f!important}
+html[data-customer-theme="dark"] header .nav-icon{background:#38291e!important;color:#f0cd9c!important;border-color:#725439!important}
+html[data-customer-theme="dark"] :is(.notice,.bag-count,.order-badge){background:#493623!important;color:#ffe5bb!important}
+html[data-customer-theme="dark"] a{color:inherit}
+#customer-theme-toggle{padding:0}
+</style>
 <title>{% block title %}Cocoa Bliss{% endblock %}</title>
 <link rel="icon" href="{% static 'images/logo.svg' %}" type="image/svg+xml">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/product-hover.css' %}">
 <link rel="stylesheet" href="{% static 'css/favourites.css' %}">
-<script src="{% static 'js/favourites.js' %}?v=2" defer></script>
+<script src="{% static 'js/favourites.js' %}?v=3" defer></script>
 {% block styles %}{% endblock %}{% include 'includes/button_styles.html' %}
 <script src="{% static 'js/main.js' %}" defer></script></head>
-<body>{% include 'includes/navbar.html' %}
+<body data-favourites-owner="{% if user.is_authenticated %}user-{{ user.pk }}{% endif %}">{% include 'includes/navbar.html' %}
 <div id="favourite-status" class="favourite-status" role="status" aria-live="polite"></div>
 <main id="main">{% for message in messages %}<div class="notice" role="status">{{ message }}</div>{% endfor %}
-{% block content %}{% endblock %}</main>{% include 'includes/footer.html' %}</body></html>
+{% block content %}{% endblock %}</main>{% include 'includes/footer.html' %}<script>
+(()=>{const b=document.getElementById('customer-theme-toggle');if(!b)return;
+function render(){const dark=document.documentElement.dataset.customerTheme==='dark';b.setAttribute('aria-pressed',String(dark));b.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');b.title=dark?'Switch to light mode':'Switch to dark mode';b.querySelector('[data-theme-symbol]').textContent=dark?'☀':'☾'}
+b.addEventListener('click',()=>{const t=document.documentElement.dataset.customerTheme==='dark'?'light':'dark';document.documentElement.dataset.customerTheme=t;try{localStorage.setItem('cocoa-customer-theme',t)}catch(e){}render()});
+window.addEventListener('storage',e=>{if(e.key==='cocoa-customer-theme'&&(e.newValue==='light'||e.newValue==='dark')){document.documentElement.dataset.customerTheme=e.newValue;render()}});render()})();
+</script></body></html>
 

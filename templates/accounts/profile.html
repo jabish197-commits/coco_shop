@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}My profile · Cocoa Bliss{% endblock %}
+{% block styles %}
+<style>
+.profile-wrap{max-width:950px;margin:60px auto;padding:0 24px}
+.profile-wrap h1{font:clamp(36px,5vw,56px) Georgia,serif;margin:10px 0 30px}
+.profile-grid{display:grid;grid-template-columns:260px 1fr;gap:24px}
+.profile-summary,.profile-form{border:1px solid #e5d1b6;border-radius:22px;padding:30px;background:#fffbf4}
+.profile-summary{background:#f0e2cc}
+.profile-avatar{width:70px;height:70px;border-radius:22px;background:#62412d;color:#fff7e8;display:grid;place-items:center;font:32px Georgia,serif;margin-bottom:20px}
+.profile-summary h2{font:26px Georgia,serif;overflow-wrap:anywhere}
+.profile-summary p{font-size:14px;color:#7b634d}
+.profile-summary a{display:block;margin-top:24px}
+.profile-form h2{font:26px Georgia,serif;margin-top:0}
+.profile-form label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+.profile-form input{box-sizing:border-box;width:100%;border:1px solid #d9bea0;border-radius:12px;padding:13px;background:#fff;color:#432d20}
+.profile-form .errorlist{color:#a32c28}
+.profile-form button{background:#573824;color:#fff7eb;border:0;border-radius:12px;padding:14px 24px;cursor:pointer}
+.profile-form input:focus-visible,.profile-form button:focus-visible{outline:3px solid #bb934e;outline-offset:3px}
+@media(max-width:650px){.profile-grid{grid-template-columns:1fr}.profile-wrap{margin:30px auto}.profile-summary,.profile-form{padding:24px}}
+</style>
+{% endblock %}
+{% block content %}
+<section class="profile-wrap"><span>YOUR COCOA BLISS ACCOUNT</span><h1>A little about you.</h1>
+<div class="profile-grid"><aside class="profile-summary">
+<div class="profile-avatar" aria-hidden="true">{{ user.username|first|upper }}</div>
+<h2>{{ user.username }}</h2><p>{% if user.is_staff %}Admin account{% else %}Customer account{% endif %}</p>
+<p>Member since {{ user.date_joined|date:"F Y" }}</p>
+<a href="{% url 'orders:history' %}">View my orders →</a>
+</aside><form method="post" class="profile-form">{% csrf_token %}<h2>Personal details</h2>
+<p>Keep your name and email up to date.</p>
+{{ form.as_p }}<button type="submit">Save changes →</button>
+</form></div></section>
+{% endblock %}

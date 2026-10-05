@@ -1,3 +1,4 @@
+from .services import release_stock
 import stripe
 from datetime import timedelta
 from django.conf import settings
@@ -17,6 +18,7 @@ def create_checkout(order):
         if session.status == "expired":
             # Conditional update cannot overwrite a concurrently confirmed payment.
             type(order).objects.filter(pk=order.pk, status="pending").update(status="expired")
+        release_stock(order.pk)
         return confirmation
     if order.created_at < timezone.now() - timedelta(hours=23):
         raise ImproperlyConfigured("Old unlinked checkout requires payment reconciliation.")
@@ -30,7 +32,7 @@ def create_checkout(order):
         customer_email=order.email,
         metadata={"order_id": str(order.id)},
         line_items=[{"price_data": {
-            "rupe": order.rs,
+            "currency": order.currency,
             "product_data": {"name": item.name},
             "unit_amount": int(item.price * 100),
         }, "quantity": item.quantity} for item in order.items.all()],

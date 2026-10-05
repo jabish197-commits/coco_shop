@@ -1,0 +1,1 @@
+<p class="stock-status" style="font-size:13px;font-weight:600;color:{% if product.stock_quantity == 0 %}#a13d30{% elif product.stock_quantity <= 5 %}#956016{% else %}#3d7146{% endif %}">{% if product.stock_quantity == 0 %}Out of stock{% elif product.stock_quantity <= 5 %}Only {{ product.stock_quantity }} left{% else %}In stock{% endif %}</p>

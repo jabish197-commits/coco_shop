@@ -1,6 +1,20 @@
-{% extends 'base.html' %}{% load static %}{% block styles %}<link rel="stylesheet" href="{% static 'css/shop.css' %}"><link rel="stylesheet" href="{% static 'css/categories.css' %}"><script src="{% static 'js/search.js' %}?v=3" defer></script>{% endblock %}
-{% block content %}<section class="section"><p class="eyebrow">The collection</p><h1>{% block collection_title %}Find your little bliss.{% endblock %}</h1>
-{% include 'includes/category_strip.html' %}
-<form method="get" class="filters category-search"><label>Search<input type="search" name="q" value="{{ query }}" maxlength="100" placeholder="Search chocolates"></label><input type="hidden" name="category" value="{{ selected_category }}"></form>
-<p id="search-status" role="status">{{ page_obj.paginator.count }} chocolates found.</p><div id="search-results"><div class="product-grid">{% for product in page_obj %}{% include 'includes/product_card.html' %}{% empty %}<p>No chocolates found. Try another search.</p>{% endfor %}</div>
-<nav class="pagination" aria-label="Pages">{% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}<span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.next_page_number }}">Next</a>{% endif %}</nav></div></section>{% endblock %}
+{% extends 'base.html' %}{% load static %}{% block styles %}
+<link rel="stylesheet" href="{% static 'css/shop.css' %}">
+<link rel="stylesheet" href="{% static 'css/categories.css' %}">
+<script src="{% static 'js/search.js' %}?v=3" defer></script>{% endblock %}
+{% block content %}<section class="section">
+    <p class="eyebrow">The collection</p>
+    <h1>{% block collection_title %}Find your little bliss.{% endblock %}</h1>
+    {% include 'includes/category_icons.html' %}
+    <form method="get" class="filters category-search"><label>Search<input type="search" name="q" value="{{ query }}"
+                maxlength="100" placeholder="Search chocolates"></label><input type="hidden" name="category"
+            value="{{ selected_category }}"></form>
+    <p id="search-status" role="status">{{ page_obj.paginator.count }} chocolates found.</p>
+    <div id="search-results">
+        <div class="product-grid">{% for product in page_obj %}{% include 'includes/product_card.html' %}{% empty %}<p>
+                No chocolates found. Try another search.</p>{% endfor %}</div>
+        <nav class="pagination" aria-label="Pages">{% if page_obj.has_previous %}<a
+                href="?q={{ query|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}<span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a
+                href="?q={{ query|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.next_page_number }}">Next</a>{% endif %}</nav>
+    </div>
+</section>{% endblock %}

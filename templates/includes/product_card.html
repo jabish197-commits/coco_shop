@@ -4,4 +4,4 @@
 </button>
 <a href="{{ product.get_absolute_url }}">
 {% with picture=product.images.first %}{% if picture %}<img src="{{ picture.image.url }}" alt="{{ picture.alt_text }}" loading="lazy">{% else %}<img src="{% static 'images/hero-chocolate.webp' %}" alt="Chocolate illustration" loading="lazy">{% endif %}{% endwith %}
-<h2>{{ product.name }}</h2></a><p>₹ {{ product.price }}</p></article>
+<h2>{{ product.name }}</h2></a><p>₹ {{ product.price }}</p>{% include 'includes/stock_status.html' %}</article>

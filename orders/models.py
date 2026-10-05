@@ -9,6 +9,7 @@ class Order(models.Model):
         FAILED = "failed", "Payment failed"
         EXPIRED = "expired", "Checkout expired"
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    stock_reserved = models.BooleanField(default=False, editable=False)
     checkout_key = models.UUIDField(unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="orders")
     full_name = models.CharField(max_length=150)
