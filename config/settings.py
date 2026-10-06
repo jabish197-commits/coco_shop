@@ -180,21 +180,11 @@ STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 CURRENCY = "inr"
 
 
-# Email: Django 5.2 SMTP configuration
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_TIMEOUT = 20
-
-EMAIL_HOST_USER = os.getenv(
-    "EMAIL_HOST_USER", "jabish197@gmail.com"
-)
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", EMAIL_HOST_USER)
+# Email: Brevo HTTPS API works on Render Free (SMTP ports are blocked).
+EMAIL_BACKEND = "core.email_backend.EmailBackend"
+BREVO_API_KEY = os.getenv("BREVO_API_KEY", "").strip()
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", os.getenv("EMAIL_HOST_USER", "")).strip()
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", DEFAULT_FROM_EMAIL)
 
 
 # Security
