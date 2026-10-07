@@ -18,6 +18,8 @@ from .forms import CheckoutForm
 from .models import Order
 from .payments import create_checkout
 from .services import create_order
+from .phone_verification import verified_phone
+from accounts.email_verification import email_is_verified
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +27,8 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def checkout(request):
+    if not email_is_verified(request.user):
+        return redirect("accounts:verify_email")
     basket = Cart(request)
 
     if not len(basket):
@@ -53,6 +57,10 @@ def checkout(request):
                 None,
                 "This checkout has expired. Reload this page.",
             )
+        elif data['email'].casefold() != request.user.email.casefold():
+            form.add_error('email', 'Use your verified account email. Change and verify it in your profile first.')
+        elif not verified_phone(request.user, key, data['phone']):
+            form.add_error('phone', 'Verify this phone number before saving your order.')
         else:
             try:
                 order = create_order(

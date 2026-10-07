@@ -14,7 +14,15 @@
       <div class="checkout-fields">
         {% include 'orders/checkout_field.html' with field=form.full_name %}
         {% include 'orders/checkout_field.html' with field=form.email %}
+        {% include 'orders/checkout_field.html' with field=form.phone %}
       </div>
+      <section aria-label="Verify delivery phone" style="padding:16px;border:1px solid #bd986b;border-radius:14px;margin:16px 0">
+        <button type="button" id="send-phone-code">Send phone code</button>
+        <label for="phone-code">SMS verification code</label>
+        <input id="phone-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10">
+        <button type="button" id="verify-phone-code">Verify phone</button>
+        <p id="phone-status" role="status" aria-live="polite">Verify your delivery number before saving your order.</p>
+      </section>
       <div class="checkout-divider"></div>
       <h2>Delivery address</h2>
       {% include 'orders/checkout_field.html' with field=form.address %}
@@ -50,6 +58,24 @@
     </aside>
   </div>
 </section>
+<script>
+(() => {
+const form=document.querySelector('.delivery-form'), status=document.getElementById('phone-status');
+const send=document.getElementById('send-phone-code'), verify=document.getElementById('verify-phone-code');
+async function requestCode(action){
+ send.disabled=verify.disabled=true;
+ status.textContent=action==='send'?'Sending code…':'Checking code…';
+ const data=new FormData();
+ data.set('phone',form.elements.phone.value); data.set('checkout_key',form.elements.checkout_key.value);
+ data.set('action',action); data.set('code',document.getElementById('phone-code').value);
+ try {
+ const response=await fetch("{% url 'orders:phone_otp' %}",{method:'POST',headers:{'X-CSRFToken':form.elements.csrfmiddlewaretoken.value},body:data});
+ const result=await response.json(); status.textContent=result.message;
+ } catch(error){status.textContent='Could not verify your phone. Please try again.';}
+ finally{send.disabled=verify.disabled=false;}
+}
+send.addEventListener('click',()=>requestCode('send'));verify.addEventListener('click',()=>requestCode('verify'));
+form.elements.phone.addEventListener('input',()=>{status.textContent='Verify this number before saving.';});
+})();
+</script>
 {% endblock %}
-
-

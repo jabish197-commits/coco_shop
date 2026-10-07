@@ -1,4 +1,5 @@
 import uuid
+from django.utils import timezone
 from django.conf import settings
 from django.db import models
 
@@ -14,6 +15,7 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="orders")
     full_name = models.CharField(max_length=150)
     email = models.EmailField()
+    phone = models.CharField(max_length=16, blank=True)
     address = models.CharField(max_length=250)
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
@@ -44,3 +46,13 @@ class Payment(models.Model):
     payment_intent = models.CharField(max_length=255, blank=True)
     paid_at = models.DateTimeField(null=True, blank=True)
 
+
+class PhoneVerification(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=16, blank=True)
+    checkout_key = models.UUIDField(null=True)
+    window_start = models.DateTimeField(default=timezone.now)
+    sends = models.PositiveIntegerField(default=0)
+    attempts = models.PositiveIntegerField(default=0)
+    sent_at = models.DateTimeField(null=True)
+    verified_until = models.DateTimeField(null=True)

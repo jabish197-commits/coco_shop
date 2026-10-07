@@ -7,9 +7,11 @@ def register(request):
         return redirect("shop:product_list")
     form = RegistrationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        user = form.save()
-        login(request, user)
-        return redirect("shop:product_list")
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        request.session["pending_email_user"] = user.pk
+        return redirect("accounts:verify_email")
     return render(request, "accounts/register.html", {"form": form})
 
 

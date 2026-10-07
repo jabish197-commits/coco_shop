@@ -149,7 +149,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": ("core.media_storage.ProductImageStorage"
+                    if os.getenv("CLOUDINARY_URL", "").strip()
+                    else "django.core.files.storage.FileSystemStorage"),
     },
     "staticfiles": {
         "BACKEND": (
@@ -194,3 +196,9 @@ CSRF_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
+
+# Twilio Verify trial: only pre-verified test recipients can receive SMS.
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID', '').strip()
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN', '').strip()
+TWILIO_VERIFY_SERVICE_SID = os.getenv('TWILIO_VERIFY_SERVICE_SID', '').strip()
+PHONE_OTP_ENABLED = True
