@@ -1,4 +1,6 @@
-from pathlib import Path
+import logging
+import os
+from urllib.parse import urlsplit, unquote
 from uuid import uuid4
 
 import cloudinary
@@ -7,6 +9,38 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage, Storage
 from django.utils.deconstruct import deconstructible
 
+logger = logging.getLogger(__name__)
+
+
+def credentials():
+    # Resolve after Django has loaded .env; avoid cached SDK import-time settings.
+    value = os.environ.get('CLOUDINARY_URL', '').strip()
+    parsed = urlsplit(value)
+    if (parsed.scheme != 'cloudinary' or not parsed.username
+            or not parsed.password or not parsed.hostname
+            or any(c in value for c in '<>')):
+        raise OSError('Cloudinary configuration invalid: check CLOUDINARY_URL on the web service.')
+    return dict(cloud_name=parsed.hostname, api_key=unquote(parsed.username),
+                api_secret=unquote(parsed.password))
+
+
+def upload_error(exc):
+    # Never expose provider response text: it may contain credentials/signatures.
+    message = str(exc).lower()
+    if 'missing permissions' in message or 'notallowed' in type(exc).__name__.lower():
+        return 'Cloudinary denied upload permission. Check the role assigned to the deployed API key.'
+    if 'invalid signature' in message or 'api_key' in message or 'unauthorized' in message:
+        return 'Cloudinary authentication failed. Check the deployed API key and matching secret.'
+    if 'cloud_name' in message or 'cloud name' in message:
+        return 'Cloudinary cloud name is invalid. Check the deployed CLOUDINARY_URL.'
+    if 'timed out' in message or 'timeout' in message:
+        return 'Cloudinary upload timed out. Please try again.'
+    if 'certificate' in message or 'ssl' in message:
+        return 'Cloudinary secure connection failed. Check server TLS certificates.'
+    if 'image' in message or 'file size' in message:
+        return 'Cloudinary rejected the image. Try a smaller JPEG or PNG.'
+    return 'Cloudinary upload failed. Check server logs for the error type.'
+
 
 @deconstructible
 class ProductImageStorage(Storage):
@@ -14,14 +48,18 @@ class ProductImageStorage(Storage):
     prefix = 'cloudinary/'
 
     def _save(self, name, content):
+        options = credentials()
         public_id = 'cocoa_bliss/products/' + uuid4().hex
         try:
+            content.seek(0)
             result = cloudinary.uploader.upload(
                 content, public_id=public_id, resource_type='image',
-                overwrite=False, timeout=20,
+                overwrite=False, timeout=20, **options,
             )
-        except Exception:
-            raise OSError('Cloudinary upload failed. Check the account configuration.') from None
+        except Exception as exc:
+            reason = upload_error(exc)
+            logger.error('Cloudinary upload failure [%s]: %s', type(exc).__name__, reason)
+            raise OSError(reason) from None
         return self.prefix + result['public_id'] + '.' + result['format']
 
     def exists(self, name):
@@ -30,7 +68,8 @@ class ProductImageStorage(Storage):
 
     def url(self, name):
         if name.startswith(self.prefix):
-            return cloudinary.CloudinaryImage(name[len(self.prefix):]).build_url(secure=True)
+            return cloudinary.CloudinaryImage(name[len(self.prefix):]).build_url(
+                secure=True, cloud_name=credentials()['cloud_name'])
         return FileSystemStorage().url(name)
 
     def _open(self, name, mode='rb'):
@@ -41,6 +80,6 @@ class ProductImageStorage(Storage):
     def delete(self, name):
         if name.startswith(self.prefix):
             public_id = name[len(self.prefix):].rsplit('.', 1)[0]
-            cloudinary.uploader.destroy(public_id, resource_type='image', timeout=20)
+            cloudinary.uploader.destroy(public_id, resource_type='image', timeout=20, **credentials())
         else:
             FileSystemStorage().delete(name)
